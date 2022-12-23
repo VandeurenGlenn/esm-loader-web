@@ -12,11 +12,14 @@ export default async (path, options) => {
   } else {
     name = parts.splice(0)[0]
   }
-  console.log(name);
-  console.log(parts);
-  parts[parts.length - 1] = parts[parts.length - 1].split('.js')[0]
+  
+  if (parts[parts.length - 1].includes('.js')) {
+    parts[parts.length - 1] = parts[parts.length - 1].split('.js')[0]
+  } else if (parts[parts.length - 1].includes('.ts')) {
+    parts[parts.length - 1] = parts[parts.length - 1].split('.ts')[0]
+  }
+    
   const target = parts.join(sep)
   const importInfo = await get(name)
-  console.log(join(importInfo.path, importInfo.exports[target]));
   return (await readFile(join('./', importInfo.path, importInfo.exports[target]))).toString()
 }
